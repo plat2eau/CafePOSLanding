@@ -15,6 +15,7 @@ import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Badge, Container, Section } from "@/components/ui";
+import type { SectionTone } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 import {
   activeOrders,
@@ -264,7 +265,7 @@ function QrOrderingVisual({
                 </p>
               </div>
               <button
-                className="inline-flex min-h-8 items-center rounded-lg bg-orange px-2.5 text-[0.68rem] font-extrabold text-navy transition hover:bg-[#ea650b]"
+                className="inline-flex min-h-8 items-center rounded-lg bg-orange px-2.5 text-[0.68rem] font-extrabold text-navy transition hover:bg-[#d97706]"
                 onClick={() => onAddItem(dish.id)}
                 type="button"
               >
@@ -469,7 +470,7 @@ function UtilityVisual({
             <polyline
               fill="none"
               points="0,70 44,48 88,58 132,34 176,44 220,26 260,38"
-              stroke="#F97316"
+              stroke="#F59E0B"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="4"
@@ -483,9 +484,9 @@ function UtilityVisual({
               strokeWidth="4"
             />
             {[
-              [0, 70, "#F97316"],
-              [132, 34, "#F97316"],
-              [260, 38, "#F97316"],
+              [0, 70, "#F59E0B"],
+              [132, 34, "#F59E0B"],
+              [260, 38, "#F59E0B"],
               [0, 42, "#2A9D8F"],
               [132, 62, "#2A9D8F"],
               [260, 56, "#2A9D8F"],
@@ -570,7 +571,11 @@ function FeatureVisual({
   );
 }
 
-export function FeatureBentoGrid() {
+type FeatureBentoGridProps = {
+  tone?: SectionTone;
+};
+
+export function FeatureBentoGrid({ tone = "warm" }: FeatureBentoGridProps) {
   const [menuItems, setMenuItems] = useState(demoMenuItems);
   const [addedItems, setAddedItems] = useState<Record<string, number>>({});
   const addedTotal = useMemo(
@@ -599,7 +604,7 @@ export function FeatureBentoGrid() {
   }
 
   return (
-    <Section id="features" tone="surface">
+    <Section id="features" tone={tone}>
       <Container>
         <div className="max-w-3xl">
           <Badge tone="orange">Everything You Need</Badge>

@@ -1,12 +1,17 @@
 import { Button, Container, Section } from "@/components/ui";
+import type { SectionTone } from "@/components/ui/section";
 import { OrderDeskProductMockup } from "./orderdesk-product-mockup";
 
-export function HeroSection() {
+type HeroSectionProps = {
+  tone?: SectionTone;
+};
+
+export function HeroSection({ tone = "warm" }: HeroSectionProps) {
   return (
     <Section
       className="overflow-hidden pb-12 pt-8 sm:pb-16 sm:pt-12 lg:pb-24 lg:pt-18"
       id="top"
-      tone="warm"
+      tone={tone}
     >
       <Container className="grid grid-cols-[minmax(0,1fr)] items-center gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
         <div className="min-w-0 max-w-2xl">
@@ -22,8 +27,20 @@ export function HeroSection() {
             manage everything from one place.
           </p>
           <div className="mt-7 flex flex-wrap gap-2 sm:mt-9 sm:gap-3">
-            <Button className="w-full px-4 min-[360px]:w-auto sm:px-5" href="#demo">
+            <Button
+              className="w-full px-4 min-[360px]:w-auto sm:px-5"
+              data-analytics-event="demo_cta_click"
+              data-analytics-label="hero_primary"
+              href="#demo"
+            >
               Request a Free Demo
+            </Button>
+            <Button
+              className="w-full px-4 min-[360px]:w-auto sm:px-5"
+              href="#how-it-works"
+              variant="secondary"
+            >
+              See How It Works
             </Button>
           </div>
         </div>

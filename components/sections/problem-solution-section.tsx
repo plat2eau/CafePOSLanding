@@ -17,6 +17,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { Badge, Container, Section } from "@/components/ui";
+import type { SectionTone } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 
 type Transformation = {
@@ -68,11 +69,17 @@ const transformations: Transformation[] = [
   },
 ];
 
-export function ProblemSolutionSection() {
+type ProblemSolutionSectionProps = {
+  tone?: SectionTone;
+};
+
+export function ProblemSolutionSection({
+  tone = "warm",
+}: ProblemSolutionSectionProps) {
   const [showAllMobileItems, setShowAllMobileItems] = useState(false);
 
   return (
-    <Section className="py-12 sm:py-14 lg:py-18" tone="warm">
+    <Section className="py-12 sm:py-14 lg:py-18" tone={tone}>
       <Container>
         <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-end">
           <div className="max-w-3xl">

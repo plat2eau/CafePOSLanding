@@ -5,7 +5,8 @@ import {
   QrCode,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { Container } from "@/components/ui";
+import { Badge, Container, Section } from "@/components/ui";
+import type { SectionTone } from "@/components/ui/section";
 
 const steps: Array<{
   description: string;
@@ -34,10 +35,24 @@ const steps: Array<{
   },
 ];
 
-export function HeroBenefitStrip() {
+type HeroBenefitStripProps = {
+  tone?: SectionTone;
+};
+
+export function HeroBenefitStrip({ tone = "warm" }: HeroBenefitStripProps) {
   return (
-    <section className="bg-warm pb-16 sm:pb-20" aria-label="Customer ordering journey">
+    <Section
+      className="pb-16 pt-4 sm:pb-20 sm:pt-8 lg:pt-10"
+      id="how-it-works"
+      tone={tone}
+    >
       <Container>
+        <div className="mb-8 max-w-3xl">
+          <Badge tone="teal">How It Works</Badge>
+          <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight text-navy sm:text-4xl">
+            How it works
+          </h2>
+        </div>
         <div className="rounded-[20px] border border-border bg-white p-4 shadow-[0_18px_50px_rgba(23,40,59,0.08)] sm:p-5">
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4 md:gap-0">
             {steps.map(({ description, icon: Icon, title }, index) => (
@@ -80,6 +95,6 @@ export function HeroBenefitStrip() {
           </div>
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }

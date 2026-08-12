@@ -94,7 +94,7 @@ export function OrderCard({
   order: (typeof activeOrders)[number];
 }) {
   return (
-    <article className="flex min-h-[238px] w-[248px] shrink-0 flex-col gap-3 rounded-2xl border border-orange/30 bg-[linear-gradient(135deg,rgba(249,115,22,0.08),transparent_58%),#ffffff] p-3 shadow-none ring-1 ring-inset ring-orange/10">
+    <article className="flex min-h-[238px] w-[248px] shrink-0 flex-col gap-3 rounded-2xl border border-orange/30 bg-white p-3 shadow-none ring-1 ring-inset ring-orange/10">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-orange">

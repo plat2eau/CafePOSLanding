@@ -1,5 +1,10 @@
+export { AudienceSection } from "./audience-section";
+export { DemoRequestForm } from "./demo-request-form";
 export { FeatureBentoGrid } from "./feature-bento-grid";
+export { FinalCTA } from "./final-cta";
+export { Footer } from "./footer";
 export { HeroBenefitStrip } from "./hero-benefit-strip";
 export { HeroSection } from "./hero-section";
 export { Navbar } from "./navbar";
+export { PilotOnboardingSection } from "./pilot-onboarding-section";
 export { ProblemSolutionSection } from "./problem-solution-section";

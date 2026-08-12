@@ -5,6 +5,8 @@ type SectionProps = ComponentPropsWithoutRef<"section"> & {
   tone?: "warm" | "white" | "surface" | "navy";
 };
 
+export type SectionTone = NonNullable<SectionProps["tone"]>;
+
 const toneClasses = {
   warm: "bg-warm text-charcoal",
   white: "bg-white text-charcoal",

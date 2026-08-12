@@ -1,10 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { Button, Container } from "@/components/ui";
+import { orderDeskLogoUrl } from "@/lib/brand";
 
 const navLinks = [
   { href: "#features", label: "Features" },
+  { href: "#how-it-works", label: "How It Works" },
   { href: "#for-cafes", label: "For Cafes" },
 ];
 
@@ -16,17 +19,21 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-warm/98 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-border/80 bg-warm lg:bg-warm/98 lg:backdrop-blur">
       <Container className="flex min-h-16 items-center justify-between gap-4">
         <a
-          className="flex items-center gap-3 font-heading text-lg font-extrabold text-navy"
+          className="flex min-w-0 items-center"
           href="#top"
           aria-label="OrderDesk home"
         >
-          <span className="grid size-9 place-items-center rounded-button bg-navy text-sm font-black text-white">
-            OD
-          </span>
-          <span>OrderDesk</span>
+          <Image
+            alt="OrderDesk"
+            className="h-10 w-auto object-contain sm:h-11"
+            height={72}
+            priority
+            src={orderDeskLogoUrl}
+            width={240}
+          />
         </a>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
@@ -41,7 +48,12 @@ export function Navbar() {
           ))}
         </nav>
 
-        <Button className="hidden lg:inline-flex" href="#demo">
+        <Button
+          className="hidden lg:inline-flex"
+          data-analytics-event="demo_cta_click"
+          data-analytics-label="navbar"
+          href="#demo"
+        >
           Request Free Demo
         </Button>
         <button
@@ -65,7 +77,13 @@ export function Navbar() {
           id="mobile-navigation"
         >
           <Container className="grid gap-2 py-4">
-            <Button className="w-full justify-center" href="#demo" onClick={closeMenu}>
+            <Button
+              className="w-full justify-center"
+              data-analytics-event="demo_cta_click"
+              data-analytics-label="mobile_navbar"
+              href="#demo"
+              onClick={closeMenu}
+            >
               Request Free Demo
             </Button>
             <nav className="grid gap-1 pt-2" aria-label="Mobile primary">
