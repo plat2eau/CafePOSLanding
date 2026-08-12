@@ -19,12 +19,12 @@ export function HeroSection({ tone = "warm" }: HeroSectionProps) {
             Run Your Cafe. Simple, Fast & Easy.
           </h1>
           <p className="mt-5 text-base leading-7 text-charcoal sm:mt-6 sm:text-lg sm:leading-8">
-            Manage orders, tables, menu, staff and sales all from one simple
-            POS.
+            OrderDesk POS is cafe-first POS software for QR ordering, tables,
+            billing, and daily sales tracking.
           </p>
           <p className="mt-3 text-base leading-7 text-muted sm:mt-4 sm:text-lg">
-            Let customers order directly from their table using QR codes and
-            manage everything from one place.
+            Manage orders, menu, staff and sales from one simple workspace
+            while customers order directly from their table using QR codes.
           </p>
           <div className="mt-7 flex flex-wrap gap-2 sm:mt-9 sm:gap-3">
             <Button

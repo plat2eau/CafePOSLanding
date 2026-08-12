@@ -8,3 +8,4 @@ export { HeroSection } from "./hero-section";
 export { Navbar } from "./navbar";
 export { PilotOnboardingSection } from "./pilot-onboarding-section";
 export { ProblemSolutionSection } from "./problem-solution-section";
+export { SeoFaqSection } from "./seo-faq-section";

@@ -1,14 +1,37 @@
 import type { MetadataRoute } from "next";
+import { resourcePages } from "@/lib/resources";
+import { absoluteUrl } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://orderdesk.example.com";
+  const lastModified = new Date("2026-08-12");
 
-  return [
+  const coreRoutes: MetadataRoute.Sitemap = [
     {
       changeFrequency: "monthly",
-      lastModified: new Date("2026-08-12"),
+      lastModified,
       priority: 1,
-      url: siteUrl,
+      url: absoluteUrl("/"),
+    },
+    {
+      changeFrequency: "monthly",
+      lastModified,
+      priority: 0.9,
+      url: absoluteUrl("/orderdeskpos"),
+    },
+    {
+      changeFrequency: "monthly",
+      lastModified,
+      priority: 0.8,
+      url: absoluteUrl("/resources"),
     },
   ];
+
+  const resourceRoutes: MetadataRoute.Sitemap = resourcePages.map((page) => ({
+    changeFrequency: "monthly",
+    lastModified: new Date(page.updatedAt),
+    priority: 0.7,
+    url: absoluteUrl(`/resources/${page.slug}`),
+  }));
+
+  return [...coreRoutes, ...resourceRoutes];
 }

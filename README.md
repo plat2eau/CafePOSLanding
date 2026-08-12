@@ -11,9 +11,11 @@ RESEND_API_KEY=
 DEMO_REQUEST_TO_EMAIL=
 DEMO_REQUEST_FROM_EMAIL=
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SOCIAL_URLS=
 ```
 
 `RESEND_API_KEY`, `DEMO_REQUEST_TO_EMAIL`, and `DEMO_REQUEST_FROM_EMAIL` are required for demo request emails. `NEXT_PUBLIC_SITE_URL` is used for metadata, robots, and sitemap URLs.
+`NEXT_PUBLIC_SOCIAL_URLS` is an optional comma-separated list for Organization structured data once official OrderDesk POS social profiles exist.
 
 If Resend email variables are not configured, valid demo requests are saved locally to `.data/demo-requests.jsonl` so the form still works during development.
 

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "OrderDesk cafe-first POS";
+export const alt = "OrderDesk POS cafe-first POS for Indian cafes";
 export const contentType = "image/png";
 export const size = {
   height: 630,
@@ -24,14 +24,14 @@ export default function Image() {
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           <div style={{ color: "#F59E0B", fontSize: 28, fontWeight: 800 }}>
-            OrderDesk
+            OrderDesk POS
           </div>
           <div style={{ fontSize: 78, fontWeight: 900, lineHeight: 1.05, maxWidth: 880 }}>
-            Run your cafe. Simple, fast and easy.
+            Cafe POS with QR ordering and billing.
           </div>
           <div style={{ color: "#667085", fontSize: 32, lineHeight: 1.35, maxWidth: 850 }}>
             QR ordering, live orders, tables, billing, reports and purchases in
-            one cafe-first POS.
+            one cafe-first POS for Indian cafes.
           </div>
         </div>
         <div

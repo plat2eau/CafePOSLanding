@@ -1,14 +1,16 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { Button, Container } from "@/components/ui";
 import { orderDeskLogoUrl } from "@/lib/brand";
 
 const navLinks = [
-  { href: "#features", label: "Features" },
-  { href: "#how-it-works", label: "How It Works" },
-  { href: "#for-cafes", label: "For Cafes" },
+  { href: "/#features", label: "Features" },
+  { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#for-cafes", label: "For Cafes" },
+  { href: "/resources", label: "Resources" },
 ];
 
 export function Navbar() {
@@ -21,20 +23,20 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-warm lg:bg-warm/98 lg:backdrop-blur">
       <Container className="flex min-h-16 items-center justify-between gap-4">
-        <a
+        <Link
           className="flex min-w-0 items-center"
-          href="#top"
-          aria-label="OrderDesk home"
+          href="/"
+          aria-label="OrderDesk POS home"
         >
           <Image
-            alt="OrderDesk"
+            alt="OrderDesk POS"
             className="h-10 w-auto object-contain sm:h-11"
             height={72}
             priority
             src={orderDeskLogoUrl}
             width={240}
           />
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-7 lg:flex" aria-label="Primary">
           {navLinks.map((link) => (
@@ -52,7 +54,7 @@ export function Navbar() {
           className="hidden lg:inline-flex"
           data-analytics-event="demo_cta_click"
           data-analytics-label="navbar"
-          href="#demo"
+          href="/#demo"
         >
           Request Free Demo
         </Button>
@@ -81,7 +83,7 @@ export function Navbar() {
               className="w-full justify-center"
               data-analytics-event="demo_cta_click"
               data-analytics-label="mobile_navbar"
-              href="#demo"
+              href="/#demo"
               onClick={closeMenu}
             >
               Request Free Demo

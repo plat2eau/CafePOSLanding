@@ -1,30 +1,50 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { DemoClickTracker } from "@/components/analytics/demo-click-tracker";
+import { JsonLd } from "@/components/seo/json-ld";
+import { siteJsonLd } from "@/lib/schema";
+import { getSiteUrl, seoKeywords, siteConfig } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://orderdesk.example.com"),
-  title: {
-    default: "OrderDesk | Cafe-First POS",
-    template: "%s | OrderDesk",
+  alternates: {
+    canonical: "/",
   },
-  description:
-    "OrderDesk helps cafes manage QR ordering, live orders, tables, billing, sales reports, and purchases from one simple POS.",
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name }],
+  category: "Cafe POS software",
+  creator: siteConfig.name,
+  description: siteConfig.description,
+  icons: {
+    apple: [{ type: "image/png", url: siteConfig.faviconUrl }],
+    icon: [{ type: "image/png", url: siteConfig.faviconUrl }],
+    shortcut: [siteConfig.faviconUrl],
+  },
+  keywords: seoKeywords,
+  metadataBase: getSiteUrl(),
+  publisher: siteConfig.name,
+  robots: {
+    follow: true,
+    index: true,
+  },
+  title: {
+    default: "OrderDesk POS | Cafe POS Software With QR Ordering",
+    template: "%s | OrderDesk POS",
+  },
   openGraph: {
-    description:
-      "Cafe-first POS software for QR ordering, live orders, tables, billing, reports, and purchases.",
+    description: siteConfig.shortDescription,
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
-    title: "OrderDesk | Cafe-First POS",
+    locale: "en_IN",
+    siteName: siteConfig.name,
+    title: "OrderDesk POS | Cafe POS Software With QR Ordering",
     type: "website",
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    description:
-      "Run your cafe with QR ordering, live orders, tables, billing, reports, and purchases in one place.",
+    description: siteConfig.shortDescription,
     images: ["/opengraph-image"],
-    title: "OrderDesk | Cafe-First POS",
+    title: "OrderDesk POS | Cafe POS Software With QR Ordering",
   },
 };
 
@@ -34,8 +54,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en-IN">
       <body>
+        <JsonLd data={siteJsonLd()} />
         {children}
         <DemoClickTracker />
         <Analytics />
