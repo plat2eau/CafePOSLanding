@@ -18,6 +18,10 @@ const config: Config = {
         border: "#D9DEE3",
         muted: "#667085",
       },
+      borderRadius: {
+        button: "10px",
+        card: "12px",
+      },
       fontFamily: {
         heading: ["var(--font-heading)", "system-ui", "sans-serif"],
         body: ["var(--font-body)", "system-ui", "sans-serif"],

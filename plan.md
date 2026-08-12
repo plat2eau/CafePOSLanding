@@ -11,7 +11,12 @@ Primary conversion: request a free demo or early pilot setup call.
 Primary references:
 
 - `CafePOS_Landing_Page_Design_System_v1.md`
-- `Content.md`
+- `Content_responsive.md`
+- `Content.md` for any legacy copy not yet covered by `Content_responsive.md`
+
+Product fidelity rule:
+
+- Whenever a section, mockup, screenshot, data pattern, workflow, or UI detail needs to represent the actual SaaS product, stop and verify against the existing CafePOS app or ask for user input before inventing it.
 
 Recommended stack:
 

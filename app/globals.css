@@ -3,8 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --background: #fff9f2;
-  --foreground: #1e2329;
+  --cp-navy: #17283b;
+  --cp-orange: #f97316;
+  --cp-teal: #2a9d8f;
+  --cp-warm-white: #fff9f2;
+  --cp-charcoal: #1e2329;
+  --cp-white: #ffffff;
+  --cp-surface: #f4f6f8;
+  --cp-border: #d9dee3;
+  --cp-muted: #667085;
+  --cp-radius-card: 12px;
+  --cp-radius-button: 10px;
+  --cp-content-max: 1240px;
+  --background: var(--cp-warm-white);
+  --foreground: var(--cp-charcoal);
   --font-heading: "Manrope", "Inter", "Segoe UI", system-ui, sans-serif;
   --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
 }
@@ -22,6 +34,24 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--cp-orange);
+  color: var(--cp-navy);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--cp-orange);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

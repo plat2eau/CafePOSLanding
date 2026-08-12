@@ -29,6 +29,11 @@ Use these files before planning or implementing major changes:
   - Treat this as the canonical landing page content strategy.
   - Use product visuals when explaining features, text when selling outcomes, and diagrams when explaining flow.
 
+- `Content_responsive.md`
+  - Use this as the primary implementation reference for responsive behavior, mobile-first layout, section structure, and component priorities.
+  - Prefer this over `Content.md` whenever the two differ.
+  - Do not improvise responsive layouts when this file gives section-specific guidance.
+
 - `README.md`
   - Use this for project setup and operational instructions once the implementation begins.
   - Keep it updated when scripts, environment variables, or deployment steps change.
