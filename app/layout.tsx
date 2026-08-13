@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { DemoClickTracker } from "@/components/analytics/demo-click-tracker";
 import { JsonLd } from "@/components/seo/json-ld";
 import { siteJsonLd } from "@/lib/schema";
-import { getSiteUrl, seoKeywords, siteConfig } from "@/lib/seo";
+import { getSiteUrl, seoKeywords, siteConfig, socialImage } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     description: siteConfig.shortDescription,
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    images: [socialImage],
     locale: "en_IN",
     siteName: siteConfig.name,
     title: "OrderDesk POS | Cafe POS Software With QR Ordering",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     description: siteConfig.shortDescription,
-    images: ["/opengraph-image"],
+    images: [socialImage],
     title: "OrderDesk POS | Cafe POS Software With QR Ordering",
   },
 };

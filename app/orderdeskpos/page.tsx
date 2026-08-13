@@ -16,7 +16,7 @@ import {
 import { JsonLd } from "@/components/seo/json-ld";
 import { Badge, Button, Container, Section } from "@/components/ui";
 import { faqPageJsonLd, softwareApplicationJsonLd } from "@/lib/schema";
-import { seoKeywords, siteConfig } from "@/lib/seo";
+import { seoKeywords, siteConfig, socialImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   alternates: {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     description:
       "OrderDeskPOS is the exact-match alias for OrderDesk POS, cafe-first POS software for Indian cafes.",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    images: [socialImage],
     title: "OrderDeskPOS | OrderDesk POS for Indian Cafes",
     type: "website",
     url: "/orderdeskpos",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     description:
       "OrderDesk POS helps Indian cafes run QR ordering, tables, billing, and daily tracking.",
-    images: ["/opengraph-image"],
+    images: [socialImage],
     title: "OrderDeskPOS | OrderDesk POS for Indian Cafes",
   },
 };

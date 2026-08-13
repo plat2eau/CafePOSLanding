@@ -63,7 +63,7 @@ export function softwareApplicationJsonLd() {
       "@id": `${absoluteUrl("/")}#organization`,
     },
     description: siteConfig.description,
-    image: absoluteUrl("/opengraph-image"),
+    image: siteConfig.logoUrl,
     name: siteConfig.name,
     operatingSystem: "Web",
     url: absoluteUrl("/"),

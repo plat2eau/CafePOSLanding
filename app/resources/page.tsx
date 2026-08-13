@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { Footer, Navbar } from "@/components/sections";
 import { Badge, Container, Section } from "@/components/ui";
 import { resourcePages } from "@/lib/resources";
-import { seoKeywords } from "@/lib/seo";
+import { seoKeywords, socialImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   alternates: {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     description:
       "Cafe POS guides for Indian cafes researching QR ordering, billing, KOT flow, and setup.",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+    images: [socialImage],
     title: "Cafe POS Resources for Indian Cafes",
     type: "website",
     url: "/resources",

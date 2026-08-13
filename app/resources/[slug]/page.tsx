@@ -11,7 +11,7 @@ import {
   resourcePages,
   type ResourcePage,
 } from "@/lib/resources";
-import { seoKeywords } from "@/lib/seo";
+import { seoKeywords, socialImage } from "@/lib/seo";
 
 type ResourcePageProps = {
   params: Promise<{ slug: string }>;
@@ -39,7 +39,7 @@ export async function generateMetadata({
     keywords: [...seoKeywords, ...page.keywords],
     openGraph: {
       description: page.description,
-      images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+      images: [socialImage],
       title: page.title,
       type: "article",
       url: `/resources/${page.slug}`,
@@ -48,7 +48,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       description: page.description,
-      images: ["/opengraph-image"],
+      images: [socialImage],
       title: page.title,
     },
   };

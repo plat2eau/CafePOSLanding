@@ -5,12 +5,17 @@ export const siteConfig = {
   description:
     "OrderDesk POS helps Indian cafes manage QR ordering, live orders, tables, billing, sales reports, and purchases from one simple POS.",
   exactAlias: "OrderDeskPOS",
-  faviconUrl:
-    "https://sxhqk8enpzaknmfx.public.blob.vercel-storage.com/ChatGPT%20Image%20Aug%2012%2C%202026%2C%2010_26_43%20PM.png",
+  faviconUrl: orderDeskLogoUrl,
   logoUrl: orderDeskLogoUrl,
   name: "OrderDesk POS",
   shortDescription:
     "Cafe-first POS software for QR ordering, live orders, tables, billing, reports, and purchases.",
+};
+
+export const socialImage = {
+  alt: `${siteConfig.name} logo`,
+  type: "image/png",
+  url: siteConfig.logoUrl,
 };
 
 export const seoKeywords = [
