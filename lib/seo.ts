@@ -1,11 +1,11 @@
-import { orderDeskLogoUrl } from "@/lib/brand";
+import { orderDeskFaviconUrl, orderDeskLogoUrl } from "@/lib/brand";
 
 export const siteConfig = {
   defaultUrl: "https://orderdeskpos.com",
   description:
     "OrderDesk POS helps Indian cafes manage QR ordering, live orders, tables, billing, sales reports, and purchases from one simple POS.",
   exactAlias: "OrderDeskPOS",
-  faviconUrl: orderDeskLogoUrl,
+  faviconUrl: orderDeskFaviconUrl,
   logoUrl: orderDeskLogoUrl,
   name: "OrderDesk POS",
   shortDescription:

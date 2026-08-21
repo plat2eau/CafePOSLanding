@@ -2,6 +2,7 @@
 
 import {
   BarChart3,
+  CheckCircle2,
   ClipboardList,
   CreditCard,
   IndianRupee,
@@ -19,6 +20,7 @@ import type { SectionTone } from "@/components/ui/section";
 import { cn } from "@/lib/utils";
 import {
   activeOrders,
+  type ActiveOrder,
   OrderCard,
   SessionCard,
   sessions,
@@ -40,6 +42,33 @@ type MenuDemoItem = {
   price: string;
   priceValue: number;
 };
+
+type DemoLiveOrder = ActiveOrder & {
+  totalValue: number;
+};
+
+type PendingTab = {
+  id: string;
+  lastPayment: string;
+  name: string;
+  totalDue: number;
+};
+
+type PurchasePriceKey = "milk" | "bread";
+
+type PurchasePrices = Record<PurchasePriceKey, number>;
+
+function currencyToNumber(value: string) {
+  return Number(value.replace(/[^\d]/g, "")) || 0;
+}
+
+function formatCurrency(value: number) {
+  return `Rs. ${value.toLocaleString("en-IN")}`;
+}
+
+function cartQuantity(addedItems: Record<string, number>) {
+  return Object.values(addedItems).reduce((sum, quantity) => sum + quantity, 0);
+}
 
 const demoMenuItems: MenuDemoItem[] = [
   {
@@ -84,6 +113,15 @@ const demoMenuItems: MenuDemoItem[] = [
     image:
       "https://images.unsplash.com/photo-1499638673689-79a0b5115d87?auto=format&fit=crop&w=160&q=70",
     name: "Lemon iced tea",
+    price: "Rs. 140",
+    priceValue: 140,
+  },
+  {
+    available: false,
+    id: "chicken-manchurian",
+    image:
+      "https://images.unsplash.com/photo-1499638673689-79a0b5115d87?auto=format&fit=crop&w=160&q=70",
+    name: "Chicken Manchurian",
     price: "Rs. 140",
     priceValue: 140,
   },
@@ -159,6 +197,68 @@ const bentoClasses: Record<Feature["visual"], string> = {
   purchases: "lg:col-span-4",
 };
 
+const initialPendingTabs: PendingTab[] = [
+  {
+    id: "meera",
+    lastPayment: "Due today",
+    name: "Meera Shah",
+    totalDue: 1240,
+  },
+  {
+    id: "rohan",
+    lastPayment: "Due Aug 12",
+    name: "Rohan Cafe Team",
+    totalDue: 620,
+  },
+  {
+    id: "anaya",
+    lastPayment: "Due Aug 9",
+    name: "Anaya Studio",
+    totalDue: 980,
+  },
+  {
+    id: "office",
+    lastPayment: "Due Aug 7",
+    name: "Daily Office Tab",
+    totalDue: 1860,
+  },
+];
+
+const initialPurchasePrices: PurchasePrices = {
+  bread: 48,
+  milk: 64,
+};
+
+const initialTableFourOrders: DemoLiveOrder[] = [
+  {
+    guest: "Aarav - 98230 44012",
+    id: "t4-001",
+    items: [["Cold coffee", "x2"]],
+    source: "Table 4",
+    status: "Served",
+    total: "Rs. 360",
+    totalValue: 360,
+  },
+  {
+    guest: "Aarav - 98230 44012",
+    id: "t4-002",
+    items: [["Pesto sandwich", "x1"]],
+    source: "Table 4",
+    status: "Served",
+    total: "Rs. 240",
+    totalValue: 240,
+  },
+  {
+    guest: "Aarav - 98230 44012",
+    id: "t4-003",
+    items: [["Brownie", "x2"]],
+    source: "Table 4",
+    status: "Preparing",
+    total: "Rs. 240",
+    totalValue: 240,
+  },
+];
+
 function FeatureIcon({ icon: Icon }: { icon: LucideIcon }) {
   return (
     <span className="grid size-10 shrink-0 place-items-center rounded-full bg-navy text-white">
@@ -167,44 +267,38 @@ function FeatureIcon({ icon: Icon }: { icon: LucideIcon }) {
   );
 }
 
-function ProductGlimpseFrame({ children }: { children: ReactNode }) {
+function ProductGlimpseFrame({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="mt-5 flex min-h-[180px] flex-1 overflow-hidden rounded-[18px] border border-border bg-surface p-3">
+    <div
+      className={cn(
+        "mt-5 flex min-h-[180px] flex-1 overflow-hidden rounded-[18px] border border-border bg-surface p-3",
+        className,
+      )}
+    >
       {children}
     </div>
   );
 }
 
 function LiveOrdersVisual({
-  addedItems,
-  menuItems,
+  submittedOrders,
 }: {
-  addedItems: Record<string, number>;
-  menuItems: MenuDemoItem[];
+  submittedOrders: DemoLiveOrder[];
 }) {
-  const addedOrderItems = menuItems
-    .filter((item) => addedItems[item.id] > 0)
-    .map((item) => [item.name, `x${addedItems[item.id]}`]);
-  const liveOrder = {
-    ...activeOrders[0],
-    items:
-      addedOrderItems.length > 0
-        ? addedOrderItems
-        : activeOrders[0].items,
-    status: addedOrderItems.length > 0 ? "Placed" : activeOrders[0].status,
-    total:
-      addedOrderItems.length > 0
-        ? `Rs. ${menuItems.reduce(
-            (sum, item) => sum + (addedItems[item.id] ?? 0) * item.priceValue,
-            0,
-          )}`
-        : activeOrders[0].total,
-  };
+  const liveOrders = submittedOrders.length
+    ? [...submittedOrders, ...activeOrders]
+    : activeOrders;
 
   return (
     <ProductGlimpseFrame>
       <div className="flex w-full gap-3 overflow-x-auto">
-        {[liveOrder, activeOrders[1]].map((order) => (
+        {liveOrders.map((order) => (
           <OrderCard key={order.id} order={order} />
         ))}
       </div>
@@ -213,18 +307,25 @@ function LiveOrdersVisual({
 }
 
 function QrOrderingVisual({
+  addedItems,
+  cartTotal,
   menuItems,
   onAddItem,
+  onSubmitOrder,
 }: {
+  addedItems: Record<string, number>;
+  cartTotal: number;
   menuItems: MenuDemoItem[];
   onAddItem: (itemId: string) => void;
+  onSubmitOrder: () => void;
 }) {
   const visibleDishes = menuItems.filter((item) => item.available);
+  const totalItems = cartQuantity(addedItems);
 
   return (
-    <ProductGlimpseFrame>
-      <div className="flex w-full flex-col overflow-hidden rounded-[16px] bg-white shadow-[0_14px_36px_rgba(23,40,59,0.08)]">
-        <div className="flex items-center justify-between gap-3 bg-surface px-3 py-2.5">
+    <ProductGlimpseFrame className="h-[300px] min-h-0 flex-none">
+      <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden rounded-[16px] bg-white shadow-[0_14px_36px_rgba(23,40,59,0.08)]">
+        <div className="flex shrink-0 items-center justify-between gap-3 bg-surface px-3 py-2.5">
           <div>
             <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-orange">
               QR Order
@@ -265,57 +366,120 @@ function QrOrderingVisual({
                 </p>
               </div>
               <button
-                className="inline-flex min-h-8 items-center rounded-lg bg-orange px-2.5 text-[0.68rem] font-extrabold text-navy transition hover:bg-[#d97706]"
+                className="inline-flex min-h-8 min-w-12 items-center justify-center rounded-lg bg-orange px-2.5 text-[0.68rem] font-extrabold text-navy transition hover:bg-[#d97706]"
                 onClick={() => onAddItem(dish.id)}
                 type="button"
               >
-                ADD
+                {(addedItems[dish.id] ?? 0) > 0
+                  ? `x${addedItems[dish.id]}`
+                  : "ADD"}
               </button>
             </div>
           ))}
         </div>
+        <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border bg-surface px-3 py-2">
+          <div className="min-w-0">
+            <p className="truncate text-xs font-bold text-muted">
+              {totalItems} items
+            </p>
+            <p className="text-sm font-extrabold text-navy">
+              {formatCurrency(cartTotal)}
+            </p>
+          </div>
+          <button
+            className="inline-flex min-h-9 shrink-0 items-center justify-center rounded-lg bg-navy px-3 text-xs font-extrabold text-white transition hover:bg-charcoal disabled:cursor-not-allowed disabled:opacity-45"
+            disabled={totalItems === 0}
+            onClick={onSubmitOrder}
+            type="button"
+          >
+            Order
+          </button>
+        </div>
       </div>
     </ProductGlimpseFrame>
   );
 }
 
-function BillingVisual() {
+function BillingVisual({
+  orders,
+  tableTotalValue,
+}: {
+  orders: DemoLiveOrder[];
+  tableTotalValue: number;
+}) {
   return (
-    <ProductGlimpseFrame>
-      <div className="flex w-full flex-col rounded-[16px] bg-white p-4 shadow-[0_14px_36px_rgba(23,40,59,0.08)]">
-        <div className="flex items-center justify-between">
+    <ProductGlimpseFrame className="h-[300px] min-h-0 flex-none">
+      <div className="flex min-h-0 w-full flex-1 flex-col rounded-[16px] bg-white p-4 shadow-[0_14px_36px_rgba(23,40,59,0.08)]">
+        <div className="flex shrink-0 items-center justify-between">
           <span className="inline-flex items-center gap-2 rounded-full bg-teal/10 px-3 py-1 text-xs font-bold text-teal">
             <IndianRupee aria-hidden="true" className="size-3.5" />
-            Receipt
+            Table 4 bill
           </span>
-          <strong className="text-navy">Rs. 840</strong>
+          <strong className="text-navy">
+            {formatCurrency(tableTotalValue)}
+          </strong>
         </div>
-        <div className="mt-4 min-h-0 flex-1 space-y-2 overflow-y-auto text-sm">
-          {[
-            "Cappuccino x2",
-            "Pesto sandwich x1",
-            "Brownie x1",
-            "Cold coffee x2",
-            "Masala fries x1",
-          ].map((item) => (
+        <div className="mt-4 min-h-0 flex-1 space-y-2 overflow-y-auto pr-1 text-sm">
+          {orders.map((order) => (
             <div
-              className="flex justify-between border-b border-border pb-2"
-              key={item}
+              className="rounded-xl border border-border bg-surface px-3 py-2"
+              key={order.id}
             >
-              <span className="text-muted">{item}</span>
-              <span className="font-semibold text-navy">paid</span>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-extrabold text-navy">
+                    #{order.id}
+                  </p>
+                  <p className="text-[0.68rem] font-bold text-muted">
+                    {order.status}
+                  </p>
+                </div>
+                <strong className="shrink-0 text-xs text-orange">
+                  {order.total}
+                </strong>
+              </div>
+              <div className="mt-2 space-y-1">
+                {order.items.map(([name, quantity]) => (
+                  <div
+                    className="flex items-center justify-between gap-3"
+                    key={`${order.id}-${name}`}
+                  >
+                    <span className="truncate text-muted">{name}</span>
+                    <span className="shrink-0 font-semibold text-navy">
+                      {quantity}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
+        <div className="mt-3 flex shrink-0 items-center justify-between rounded-xl bg-surface px-3 py-2 text-xs font-bold">
+          <span className="text-muted">{orders.length} table orders</span>
+          <span className="text-orange">
+            Bill {formatCurrency(tableTotalValue)}
+          </span>
+        </div>
       </div>
     </ProductGlimpseFrame>
   );
 }
 
-function TablesVisual({ tableTotal }: { tableTotal: string }) {
+function TablesVisual({
+  latestOrder,
+  tableFourOrderCount,
+  tableFourTotalValue,
+}: {
+  latestOrder?: DemoLiveOrder;
+  tableFourOrderCount: number;
+  tableFourTotalValue: number;
+}) {
   const liveSession = {
     ...sessions[0],
-    total: tableTotal,
+    activeOrderTotal: latestOrder?.total ?? sessions[0].activeOrderTotal,
+    lastActive: latestOrder ? "just now" : sessions[0].lastActive,
+    orders: tableFourOrderCount,
+    total: formatCurrency(tableFourTotalValue),
   };
 
   return (
@@ -329,28 +493,54 @@ function TablesVisual({ tableTotal }: { tableTotal: string }) {
   );
 }
 
-function SalesVisual() {
+function SalesVisual({
+  tableEightTotalValue,
+  tableFourOrderCount,
+  tableFourTotalValue,
+}: {
+  tableEightTotalValue: number;
+  tableFourOrderCount: number;
+  tableFourTotalValue: number;
+}) {
+  const salesTotal = tableFourTotalValue + tableEightTotalValue;
+  const orderCount = tableFourOrderCount + sessions[1].orders;
+  const dailySales = [620, 780, 710, 930, 860, 1040, salesTotal];
+  const maxSales = Math.max(...dailySales, 1);
+
   return (
     <ProductGlimpseFrame>
       <div className="flex w-full flex-col rounded-[16px] bg-white p-4 shadow-[0_14px_36px_rgba(23,40,59,0.08)]">
         <div className="grid grid-cols-2 gap-2">
           <div className="rounded-xl bg-teal/10 p-3">
             <p className="text-xs font-bold uppercase text-muted">Sales</p>
-            <strong className="text-lg text-navy">Rs. 18,650</strong>
+            <strong className="text-lg text-navy">
+              {formatCurrency(salesTotal)}
+            </strong>
           </div>
           <div className="rounded-xl bg-surface p-3">
             <p className="text-xs font-bold uppercase text-muted">Orders</p>
-            <strong className="text-lg text-navy">42</strong>
+            <strong className="text-lg text-navy">{orderCount}</strong>
           </div>
         </div>
         <div className="mt-4 flex min-h-24 flex-1 items-end gap-2">
-          {[36, 52, 44, 70, 58, 82, 64].map((height, index) => (
+          {dailySales.map((value, index) => (
             <span
-              className="flex-1 rounded-t-md bg-orange/80"
+              className={cn(
+                "flex-1 rounded-t-md",
+                index === dailySales.length - 1 ? "bg-teal" : "bg-orange/80",
+              )}
               key={index}
-              style={{ height: `${height}%` }}
+              style={{ height: `${Math.max(18, (value / maxSales) * 100)}%` }}
             />
           ))}
+        </div>
+        <div className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-navy">
+          <span className="rounded-lg bg-surface px-2 py-1.5">
+            Table 4 {formatCurrency(tableFourTotalValue)}
+          </span>
+          <span className="rounded-lg bg-surface px-2 py-1.5">
+            Table 8 {formatCurrency(tableEightTotalValue)}
+          </span>
         </div>
       </div>
     </ProductGlimpseFrame>
@@ -359,11 +549,19 @@ function SalesVisual() {
 
 function UtilityVisual({
   menuItems,
+  onChangePurchasePrice,
+  onClearTab,
   onToggleMenuItem,
+  pendingTabs,
+  purchasePrices,
   visual,
 }: {
   menuItems: MenuDemoItem[];
+  onChangePurchasePrice: (item: PurchasePriceKey, value: number) => void;
+  onClearTab: (tabId: string) => void;
   onToggleMenuItem: (itemId: string) => void;
+  pendingTabs: PendingTab[];
+  purchasePrices: PurchasePrices;
   visual: Feature["visual"];
 }) {
   if (visual === "menu") {
@@ -407,27 +605,43 @@ function UtilityVisual({
     return (
       <ProductGlimpseFrame>
         <div className="min-h-0 w-full space-y-2 overflow-y-auto rounded-[16px] bg-white p-3 shadow-[0_14px_36px_rgba(23,40,59,0.08)]">
-          {[
-            ["Meera Shah", "Rs. 1,240", "Paid Aug 10"],
-            ["Rohan Cafe Team", "Rs. 620", "Paid Aug 8"],
-            ["Anaya Studio", "Rs. 980", "Paid Aug 6"],
-            ["Daily Office Tab", "Rs. 1,860", "Paid Aug 3"],
-          ].map(([name, totalDue, lastPayment]) => (
+          {pendingTabs.length === 0 ? (
+            <div className="rounded-xl bg-surface px-3 py-4 text-center text-sm font-bold text-teal">
+              No pending payments
+            </div>
+          ) : null}
+          {pendingTabs.map((tab) => (
             <div
               className="rounded-xl bg-surface px-3 py-2 text-sm"
-              key={name}
+              key={tab.id}
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="truncate font-semibold text-charcoal">
-                  {name}
+                  {tab.name}
                 </span>
                 <span className="shrink-0 text-xs font-extrabold text-navy">
-                  {totalDue}
+                  {formatCurrency(tab.totalDue)}
                 </span>
               </div>
-              <p className="mt-1 text-xs font-semibold text-muted">
-                Last payment: {lastPayment}
-              </p>
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <p className="min-w-0 truncate text-xs font-semibold text-muted">
+                  {tab.lastPayment}
+                </p>
+                <button
+                  aria-label={`Clear ${tab.name} tab`}
+                  className="inline-flex min-h-8 shrink-0 items-center gap-1.5 rounded-lg border border-teal/20 bg-white px-2.5 text-[0.68rem] font-extrabold text-teal transition hover:border-teal hover:bg-teal/10"
+                  onClick={() => onClearTab(tab.id)}
+                  title="Clear tab"
+                  type="button"
+                >
+                  <CheckCircle2
+                    aria-hidden="true"
+                    className="size-3.5"
+                    strokeWidth={2.4}
+                  />
+                  Clear
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -436,6 +650,27 @@ function UtilityVisual({
   }
 
   if (visual === "purchases") {
+    const purchaseDays = ["Mon", "Tue", "Wed", "Fri", "Today"];
+    const milkValues = [58, 61, 59, 66, purchasePrices.milk];
+    const breadValues = [44, 46, 43, 49, purchasePrices.bread];
+    const allPrices = [...milkValues, ...breadValues];
+    const minPrice = Math.min(...allPrices) - 4;
+    const maxPrice = Math.max(...allPrices) + 4;
+    const chartWidth = 260;
+    const chartTop = 18;
+    const chartBottom = 96;
+    const priceToPoint = (value: number, index: number) => {
+      const x = (index / (purchaseDays.length - 1)) * chartWidth;
+      const y =
+        chartBottom -
+        ((value - minPrice) / Math.max(1, maxPrice - minPrice)) *
+        (chartBottom - chartTop);
+
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    };
+    const milkPoints = milkValues.map(priceToPoint).join(" ");
+    const breadPoints = breadValues.map(priceToPoint).join(" ");
+
     return (
       <ProductGlimpseFrame>
         <div className="flex w-full flex-col rounded-[16px] bg-white p-3 shadow-[0_14px_36px_rgba(23,40,59,0.08)]">
@@ -469,7 +704,7 @@ function UtilityVisual({
             ))}
             <polyline
               fill="none"
-              points="0,70 44,48 88,58 132,34 176,44 220,26 260,38"
+              points={milkPoints}
               stroke="#F59E0B"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -477,42 +712,66 @@ function UtilityVisual({
             />
             <polyline
               fill="none"
-              points="0,42 44,54 88,36 132,62 176,50 220,68 260,56"
+              points={breadPoints}
               stroke="#2A9D8F"
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="4"
             />
             {[
-              [0, 70, "#F59E0B"],
-              [132, 34, "#F59E0B"],
-              [260, 38, "#F59E0B"],
-              [0, 42, "#2A9D8F"],
-              [132, 62, "#2A9D8F"],
-              [260, 56, "#2A9D8F"],
-            ].map(([cx, cy, fill]) => (
-              <circle
-                cx={cx}
-                cy={cy}
-                fill={String(fill)}
-                key={`${cx}-${cy}-${fill}`}
-                r="4"
-              />
-            ))}
+              ...milkValues.map((value, index) => ({
+                fill: "#F59E0B",
+                point: priceToPoint(value, index),
+              })),
+              ...breadValues.map((value, index) => ({
+                fill: "#2A9D8F",
+                point: priceToPoint(value, index),
+              })),
+            ].map(({ fill, point }) => {
+              const [cx, cy] = point.split(",");
+
+              return (
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  fill={fill}
+                  key={`${cx}-${cy}-${fill}`}
+                  r="4"
+                />
+              );
+            })}
           </svg>
           <div className="mt-2 flex justify-between text-[0.68rem] font-bold uppercase text-muted">
-            <span>Mon</span>
-            <span>Wed</span>
-            <span>Fri</span>
-            <span>Today</span>
+            {purchaseDays.map((day) => (
+              <span key={day}>{day}</span>
+            ))}
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-navy">
-            <span className="rounded-lg bg-surface px-2 py-1.5">
-              Milk Rs. 64/L
-            </span>
-            <span className="rounded-lg bg-surface px-2 py-1.5">
-              Bread Rs. 48
-            </span>
+            {[
+              { item: "milk" as const, label: "Milk Rs./L" },
+              { item: "bread" as const, label: "Bread Rs." },
+            ].map(({ item, label }) => (
+              <label
+                className="flex items-center justify-between gap-2 rounded-lg bg-surface px-2 py-1.5"
+                key={item}
+              >
+                <span className="truncate">{label}</span>
+                <input
+                  className="h-7 w-14 rounded-md border border-border bg-white px-1.5 text-right text-xs font-extrabold text-navy outline-none focus:border-orange"
+                  min="1"
+                  onChange={(event) => {
+                    if (Number.isFinite(event.currentTarget.valueAsNumber)) {
+                      onChangePurchasePrice(
+                        item,
+                        event.currentTarget.valueAsNumber,
+                      );
+                    }
+                  }}
+                  type="number"
+                  value={purchasePrices[item]}
+                />
+              </label>
+            ))}
           </div>
         </div>
       </ProductGlimpseFrame>
@@ -539,33 +798,90 @@ function UtilityVisual({
 
 function FeatureVisual({
   addedItems,
+  cartTotal,
+  latestOrder,
   menuItems,
+  onChangePurchasePrice,
   onAddItem,
+  onClearTab,
+  onSubmitOrder,
   onToggleMenuItem,
-  tableTotal,
+  pendingTabs,
+  purchasePrices,
+  submittedOrders,
+  tableEightTotalValue,
+  tableFourOrders,
+  tableFourOrderCount,
+  tableFourTotalValue,
   visual,
 }: {
   addedItems: Record<string, number>;
+  cartTotal: number;
+  latestOrder?: DemoLiveOrder;
   menuItems: MenuDemoItem[];
+  onChangePurchasePrice: (item: PurchasePriceKey, value: number) => void;
   onAddItem: (itemId: string) => void;
+  onClearTab: (tabId: string) => void;
+  onSubmitOrder: () => void;
   onToggleMenuItem: (itemId: string) => void;
-  tableTotal: string;
+  pendingTabs: PendingTab[];
+  purchasePrices: PurchasePrices;
+  submittedOrders: DemoLiveOrder[];
+  tableEightTotalValue: number;
+  tableFourOrders: DemoLiveOrder[];
+  tableFourOrderCount: number;
+  tableFourTotalValue: number;
   visual: Feature["visual"];
 }) {
   if (visual === "orders") {
-    return <LiveOrdersVisual addedItems={addedItems} menuItems={menuItems} />;
+    return <LiveOrdersVisual submittedOrders={submittedOrders} />;
   }
   if (visual === "qr") {
-    return <QrOrderingVisual menuItems={menuItems} onAddItem={onAddItem} />;
+    return (
+      <QrOrderingVisual
+        addedItems={addedItems}
+        cartTotal={cartTotal}
+        menuItems={menuItems}
+        onAddItem={onAddItem}
+        onSubmitOrder={onSubmitOrder}
+      />
+    );
   }
-  if (visual === "billing") return <BillingVisual />;
-  if (visual === "tables") return <TablesVisual tableTotal={tableTotal} />;
-  if (visual === "sales") return <SalesVisual />;
+  if (visual === "billing") {
+    return (
+      <BillingVisual
+        orders={tableFourOrders}
+        tableTotalValue={tableFourTotalValue}
+      />
+    );
+  }
+  if (visual === "tables") {
+    return (
+      <TablesVisual
+        latestOrder={latestOrder}
+        tableFourOrderCount={tableFourOrderCount}
+        tableFourTotalValue={tableFourTotalValue}
+      />
+    );
+  }
+  if (visual === "sales") {
+    return (
+      <SalesVisual
+        tableEightTotalValue={tableEightTotalValue}
+        tableFourOrderCount={tableFourOrderCount}
+        tableFourTotalValue={tableFourTotalValue}
+      />
+    );
+  }
 
   return (
     <UtilityVisual
       menuItems={menuItems}
+      onChangePurchasePrice={onChangePurchasePrice}
+      onClearTab={onClearTab}
       onToggleMenuItem={onToggleMenuItem}
+      pendingTabs={pendingTabs}
+      purchasePrices={purchasePrices}
       visual={visual}
     />
   );
@@ -578,7 +894,11 @@ type FeatureBentoGridProps = {
 export function FeatureBentoGrid({ tone = "warm" }: FeatureBentoGridProps) {
   const [menuItems, setMenuItems] = useState(demoMenuItems);
   const [addedItems, setAddedItems] = useState<Record<string, number>>({});
-  const addedTotal = useMemo(
+  const [pendingTabs, setPendingTabs] = useState(initialPendingTabs);
+  const [purchasePrices, setPurchasePrices] = useState(initialPurchasePrices);
+  const [submittedOrders, setSubmittedOrders] = useState<DemoLiveOrder[]>([]);
+  const [orderSequence, setOrderSequence] = useState(1);
+  const cartTotal = useMemo(
     () =>
       menuItems.reduce(
         (sum, item) => sum + (addedItems[item.id] ?? 0) * item.priceValue,
@@ -586,7 +906,17 @@ export function FeatureBentoGrid({ tone = "warm" }: FeatureBentoGridProps) {
       ),
     [addedItems, menuItems],
   );
-  const tableTotal = addedTotal > 0 ? `Rs. ${addedTotal}` : sessions[0].total;
+  const latestOrder = submittedOrders[0];
+  const tableFourOrders = useMemo(
+    () => [...submittedOrders, ...initialTableFourOrders],
+    [submittedOrders],
+  );
+  const tableFourTotalValue = tableFourOrders.reduce(
+    (sum, order) => sum + order.totalValue,
+    0,
+  );
+  const tableEightTotalValue = currencyToNumber(sessions[1].total);
+  const tableFourOrderCount = tableFourOrders.length;
 
   function handleToggleMenuItem(itemId: string) {
     setMenuItems((items) =>
@@ -600,6 +930,44 @@ export function FeatureBentoGrid({ tone = "warm" }: FeatureBentoGridProps) {
     setAddedItems((items) => ({
       ...items,
       [itemId]: (items[itemId] ?? 0) + 1,
+    }));
+  }
+
+  function handleSubmitOrder() {
+    const orderedItems = menuItems.filter((item) => addedItems[item.id] > 0);
+
+    if (orderedItems.length === 0) return;
+
+    const totalValue = orderedItems.reduce(
+      (sum, item) => sum + (addedItems[item.id] ?? 0) * item.priceValue,
+      0,
+    );
+    const order: DemoLiveOrder = {
+      guest: "QR guest - Table 4",
+      id: `qr${String(orderSequence).padStart(4, "0")}`,
+      items: orderedItems.map((item) => [
+        item.name,
+        `x${addedItems[item.id]}`,
+      ]),
+      source: "Table 4",
+      status: "Placed",
+      total: formatCurrency(totalValue),
+      totalValue,
+    };
+
+    setSubmittedOrders((orders) => [order, ...orders]);
+    setAddedItems({});
+    setOrderSequence((sequence) => sequence + 1);
+  }
+
+  function handleClearTab(tabId: string) {
+    setPendingTabs((tabs) => tabs.filter((tab) => tab.id !== tabId));
+  }
+
+  function handlePurchasePriceChange(item: PurchasePriceKey, value: number) {
+    setPurchasePrices((prices) => ({
+      ...prices,
+      [item]: Math.max(1, Math.round(value)),
     }));
   }
 
@@ -640,10 +1008,21 @@ export function FeatureBentoGrid({ tone = "warm" }: FeatureBentoGridProps) {
               </div>
               <FeatureVisual
                 addedItems={addedItems}
+                cartTotal={cartTotal}
+                latestOrder={latestOrder}
                 menuItems={menuItems}
+                onChangePurchasePrice={handlePurchasePriceChange}
                 onAddItem={handleAddItem}
+                onClearTab={handleClearTab}
+                onSubmitOrder={handleSubmitOrder}
                 onToggleMenuItem={handleToggleMenuItem}
-                tableTotal={tableTotal}
+                pendingTabs={pendingTabs}
+                purchasePrices={purchasePrices}
+                submittedOrders={submittedOrders}
+                tableEightTotalValue={tableEightTotalValue}
+                tableFourOrders={tableFourOrders}
+                tableFourOrderCount={tableFourOrderCount}
+                tableFourTotalValue={tableFourTotalValue}
                 visual={feature.visual}
               />
             </article>

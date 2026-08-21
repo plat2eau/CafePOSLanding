@@ -6,7 +6,25 @@ const filters = [
   { label: "Preparing", count: 2 },
 ];
 
-export const activeOrders = [
+export type ActiveOrder = {
+  guest: string;
+  id: string;
+  items: Array<[string, string]>;
+  source: string;
+  status: string;
+  total: string;
+};
+
+export type TableSession = {
+  activeOrderTotal?: string;
+  label: string;
+  lastActive: string;
+  orders: number;
+  requests: number;
+  total: string;
+};
+
+export const activeOrders: ActiveOrder[] = [
   {
     id: "a8f31c29",
     source: "Table 3",
@@ -33,8 +51,9 @@ export const activeOrders = [
   },
 ];
 
-export const sessions = [
+export const sessions: TableSession[] = [
   {
+    activeOrderTotal: "Rs. 840",
     label: "Table 4",
     orders: 3,
     requests: 1,
@@ -91,7 +110,7 @@ function FilterChip({
 export function OrderCard({
   order,
 }: {
-  order: (typeof activeOrders)[number];
+  order: ActiveOrder;
 }) {
   return (
     <article className="flex min-h-[238px] w-[248px] shrink-0 flex-col gap-3 rounded-2xl border border-orange/30 bg-white p-3 shadow-none ring-1 ring-inset ring-orange/10">
@@ -152,10 +171,10 @@ export function OrderCard({
 export function SessionCard({
   session,
 }: {
-  session: (typeof sessions)[number];
+  session: TableSession;
 }) {
   return (
-    <article className="flex aspect-square min-w-[210px] flex-col justify-between rounded-2xl border border-border bg-white p-3">
+    <article className="flex min-h-[196px] min-w-[268px] flex-col justify-between rounded-2xl border border-border bg-white p-3">
       <div className="flex items-start justify-between gap-3">
         <div>
           <span className="rounded-full bg-teal/10 px-2.5 py-1 text-xs font-bold text-teal">
